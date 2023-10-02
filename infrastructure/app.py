@@ -9,5 +9,6 @@ from vpc.vpc_stack import VPCStack
 
 app = App()
 vpc_stack = VPCStack(app, "VPCStack")
-sagemaker_domain_stack = SagemakerDomainStack(app, "SagemakerDomainStack")
+env_EU = Environment(account="562760952310", region="eu-central-1")
+sagemaker_domain_stack = SagemakerDomainStack(app, "SagemakerDomainStack", env=env_EU)
 app.synth()
