@@ -29,6 +29,7 @@ class VPCStack(Stack):
 
         vpc = Vpc(
             scope=self,
+            id="mlflow-vpc",
             ip_addresses=IpAddresses.cidr("10.0.0.0/24"),
             nat_gateway_provider=NatProvider.gateway(),
             nat_gateways=1,
