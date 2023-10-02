@@ -50,10 +50,10 @@ jobs:
           aws-region: eu-central-1
 
       - name: cdk bootstrap infrastructure stack
-        run: cdk bootstrap aws://${ACCOUNT_ID}/${AWS_REGION}
+        run: cdk bootstrap aws://${{ env.ACCOUNT_ID }}/${{ env.AWS_REGION }}
         working-directory: ./infrastructure
 
       - name: cdk deploy infrastructure stack
-        run: cdk deploy --parameters account_id=${ACCOUNT_ID} --parameters region=${AWS_REGION} --require-approval never
+        run: cdk deploy --parameters account_id=${{ env.ACCOUNT_ID }} --parameters region=${{ env.AWS_REGION }} --require-approval never
         working-directory: ./infrastructure
 
