@@ -1,4 +1,4 @@
-from aws_cdk import Stack, Fn
+from aws_cdk import Stack, Fn, Environment, CfnParameter
 from aws_cdk.aws_ec2 import Vpc
 from aws_cdk.aws_iam import Role, ServicePrincipal, ManagedPolicy
 from aws_cdk.aws_sagemaker import CfnDomain, CfnUserProfile
@@ -7,9 +7,11 @@ from constructs import Construct
 
 class SagemakerDomainStack(Stack):
 
-    def __init__(self, scope: Construct, id: str,
-                 **kwargs) -> None:
-        super().__init__(scope, id, **kwargs)
+    def __init__(self, scope: Construct, id: str) -> None:
+        account_param = CfnParameter(scope=self, id="account_id", type="String")
+        region_param = CfnParameter(scope=self, id="aws_region", type="String")
+        env_EU = Environment(account=account_param.value_as_string, region=region_param.value_as_string)
+        super().__init__(scope, id, env=env_EU)
         role_sagemaker_studio_domain = Role(self, 'RoleForSagemakerMLOpsUsers',
                                             assumed_by=ServicePrincipal('sagemaker.amazonaws.com'),
                                             role_name="SagemakerMLOpsUserRole",
