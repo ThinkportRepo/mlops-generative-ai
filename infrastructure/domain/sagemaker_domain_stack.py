@@ -1,4 +1,5 @@
 from aws_cdk import Stack, Fn
+from aws_cdk.aws_ec2 import Vpc
 from aws_cdk.aws_iam import Role, ServicePrincipal, ManagedPolicy
 from aws_cdk.aws_sagemaker import CfnDomain, CfnUserProfile
 from constructs import Construct
@@ -20,7 +21,10 @@ class SagemakerDomainStack(Stack):
         sagemaker_domain_name = "SagemakerMLOpsDomain"
 
         vpc_id = Fn.import_value("VPCId")
-        public_subnet_ids = [public_subnet.subnet_id for public_subnet in vpc_id.public_subnets]
+        vpc = Vpc.from_lookup(self, "VPC",
+                              vpc_id=self.node.try_get_context(vpc_id)
+                              )
+        public_subnet_ids = [public_subnet.subnet_id for public_subnet in vpc.public_subnets]
 
         mlops_sagemaker_domain = CfnDomain(self,
                                            domain_name=sagemaker_domain_name,
