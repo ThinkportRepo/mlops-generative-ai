@@ -19,18 +19,9 @@ class SagemakerDomainStack(Stack):
                                                                                       managed_policy_arn="arn:aws:iam::aws:policy/AmazonSageMakerFullAccess")
                                             ])
         sagemaker_domain_name = "SagemakerMLOpsDomain"
-
-        # ==============================
-        # ======= CFN PARAMETERS =======
-        # ==============================
-        account_param = CfnParameter(scope=self, id="account_id", type="String")
-        region_param = CfnParameter(scope=self, id="aws_region", type="String")
-
         vpc_id = Fn.import_value("VPCId")
         vpc = Vpc.from_lookup(self, "VPC",
-                              vpc_id=self.node.try_get_context(vpc_id),
-                              owner_account_id=account_param.value_as_string,
-                              region=region_param.value_as_string
+                              vpc_id=vpc_id
                               )
         public_subnet_ids = [public_subnet.subnet_id for public_subnet in vpc.public_subnets]
 
