@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - container/**
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 env:
