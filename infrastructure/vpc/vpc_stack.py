@@ -7,6 +7,7 @@ from aws_cdk.aws_ec2 import (
     NatProvider,
     GatewayVpcEndpointAwsService
 )
+from aws_cdk.aws_ssm import StringParameter
 from constructs import Construct
 
 
@@ -42,12 +43,10 @@ class VPCStack(Stack):
         )
 
         # ==================================================
-        # =================== OUTPUTS ======================
+        # =================== SSM PARAM ======================
         # ==================================================
-        CfnOutput(
-            scope=self,
-            id="VPCId",
-            value=vpc.vpc_id,
-        )
-
-
+        vpc_param = StringParameter(self, "VPCID",
+                                    description="VPC ID",
+                                    parameter_name="/mlops/vpc_id_param",
+                                    string_value=vpc.vpc_id,
+                                    )
