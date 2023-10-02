@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 
 env:
-  DEPLOYMENT_ROLE: "arn:aws:iam::562760952310:role/AWSGithubActionsRole"
-  ACCOUNT_ID: "562760952310"
-  AWS_REGION: "eu-central-1"
+  DEPLOYMENT_ROLE: ${{ secrets.DEPLOYMENT_ROLE }}
+  ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
 
 
 permissions:
