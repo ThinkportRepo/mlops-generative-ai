@@ -30,7 +30,7 @@ class SagemakerDomainStack(Stack):
                                            vpc_id=vpc_id,
                                            subnet_ids=public_subnet_ids,
                                            default_user_settings=CfnDomain.UserSettingsProperty(
-                                               execution_role=role_sagemaker_studio_domain.role_name
+                                               execution_role=role_sagemaker_studio_domain.role_arn
                                            )
                                            )
         mlops_sagemaker_user_profile = CfnUserProfile(self, "MyCfnUserProfile",
