@@ -43,10 +43,11 @@ class VPCStack(Stack):
         )
 
         # ==================================================
-        # =================== SSM PARAM ======================
+        # =================== OUTPUTS ======================
         # ==================================================
-        vpc_param = StringParameter(self, "VPCID",
-                                    description="VPC ID",
-                                    parameter_name="/mlops/vpc_id",
-                                    string_value=vpc.vpc_id,
-                                    )
+        CfnOutput(
+            scope=self,
+            id="VPCID",
+            value=vpc.vpc_id
+        )
+

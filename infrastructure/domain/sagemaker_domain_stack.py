@@ -20,10 +20,12 @@ class SagemakerDomainStack(Stack):
                                                                                       managed_policy_arn="arn:aws:iam::aws:policy/AmazonSageMakerFullAccess")
                                             ])
         sagemaker_domain_name = "SagemakerMLOpsDomain"
-        vpc_id = StringParameter.value_from_lookup(self, parameter_name="/mlops/vpc_id")
-        vpc = Vpc.from_lookup(self, "VPC",
-                              vpc_id=vpc_id
-                              )
+        vpc_id = Fn.import_value("VPCID")
+        vpc = Vpc.from_vpc_attributes(self, "VPC",
+                                      availability_zones=["eu-central-1a", "eu-central-1b"],
+                                      vpc_id=vpc_id
+                                     )
+
         public_subnet_ids = [public_subnet.subnet_id for public_subnet in vpc.public_subnets]
 
         mlops_sagemaker_domain = CfnDomain(self, "MyCfnDomain",
