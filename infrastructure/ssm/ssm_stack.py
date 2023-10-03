@@ -12,18 +12,18 @@ class SSMStack(Stack):
                                  parameter_name="/mlops/vpc/id",
                                  string_value=vpc.vpc_id
                                  )
-        print(vpc.public_subnets)
-        vpc_public_subnets = StringParameter(self, "MLOpsVpcId",
+
+        vpc_public_subnets = StringParameter(self, "MLOpsVpcPublicSubnets",
                                              parameter_name="/mlops/vpc/public/subnet/id",
                                              string_value=str(vpc.public_subnets)
                                              )
 
-        vpc_private_subnets = StringParameter(self, "MLOpsVpcId",
+        vpc_private_subnets = StringParameter(self, "MLOpsVpcPrivateSubnets",
                                               parameter_name="/mlops/vpc/private/subnet/id",
                                               string_value=str(vpc.private_subnets)
                                               )
 
-        vpc_isolated_subnets = StringParameter(self, "MLOpsVpcId",
+        vpc_isolated_subnets = StringParameter(self, "MLOpsVpcIsolatedSubnets",
                                                parameter_name="/mlops/vpc/private/subnet/id",
                                                string_value=str(vpc.isolated_subnets)
                                                )
