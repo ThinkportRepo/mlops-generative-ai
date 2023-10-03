@@ -28,7 +28,7 @@ class VPCStack(Stack):
             name="DB", subnet_type=SubnetType.PRIVATE_ISOLATED, cidr_mask=28
         )
 
-        vpc = Vpc(
+        self.vpc = Vpc(
             scope=self,
             id="mlflow-vpc",
             ip_addresses=IpAddresses.cidr("10.0.0.0/24"),
@@ -38,25 +38,6 @@ class VPCStack(Stack):
             subnet_configuration=[public_subnet, private_subnet, isolated_subnet],
         )
 
-        vpc.add_gateway_endpoint(
+        self.vpc.add_gateway_endpoint(
             "S3Endpoint", service=GatewayVpcEndpointAwsService.S3
         )
-
-        # ==================================================
-        # =================== OUTPUTS ======================
-        # ==================================================
-        CfnOutput(
-            scope=self,
-            id="vpc_id",
-            value=vpc.vpc_id,
-            export_name="mlops_vpc_id"
-        )
-
-        for idx, subnet in vpc.private_subnets:
-            CfnOutput(self, f"private_subnet{idx}", value=subnet, export_name=f"private_subnet{idx}")
-
-        for idx, subnet in vpc.public_subnets:
-            CfnOutput(self, f"public_subnet{idx}", value=subnet, export_name=f"public_subnet{idx}")
-
-        for idx, subnet in vpc.isolated_subnets:
-            CfnOutput(self, f"isolated_subnet{idx}", value=subnet, export_name=f"isolated_subnet{idx}")
