@@ -54,6 +54,6 @@ jobs:
         working-directory: ./infrastructure
 
       - name: cdk deploy infrastructure stack
-        run: cdk deploy --parameters account_id=${{ env.ACCOUNT_ID }} --parameters region=${{ env.AWS_REGION }} --require-approval never
+        run: cdk deploy --all --parameters account_id=${{ env.ACCOUNT_ID }} --parameters region=${{ env.AWS_REGION }} --require-approval never
         working-directory: ./infrastructure
 
