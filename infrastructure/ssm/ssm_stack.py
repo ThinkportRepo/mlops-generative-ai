@@ -24,6 +24,6 @@ class SSMStack(Stack):
                                               )
 
         vpc_isolated_subnets = StringParameter(self, "MLOpsVpcIsolatedSubnets",
-                                               parameter_name="/mlops/vpc/private/subnet/id",
+                                               parameter_name="/mlops/vpc/isolated/subnet/id",
                                                string_value=str(vpc.isolated_subnets)
                                                )
