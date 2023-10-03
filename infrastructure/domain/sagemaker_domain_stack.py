@@ -20,7 +20,7 @@ class SagemakerDomainStack(Stack):
                                                                                       managed_policy_arn="arn:aws:iam::aws:policy/AmazonSageMakerFullAccess")
                                             ])
         sagemaker_domain_name = "SagemakerMLOpsDomain"
-        vpc_id = StringParameter.value_from_lookup(self, parameter_name="/mlops/vpc_id_param")
+        vpc_id = StringParameter.value_from_lookup(self, parameter_name="/mlops/vpc_id")
         vpc = Vpc.from_lookup(self, "VPC",
                               vpc_id=vpc_id
                               )
