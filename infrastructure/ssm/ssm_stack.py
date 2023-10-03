@@ -41,11 +41,11 @@ class SSMStack(Stack):
         isolated_subnet0 = vpc.isolated_subnets[0]
         isolated_subnet1 = vpc.isolated_subnets[1]
 
-        vpc_isolated_subnet0 = StringParameter(self, "MLOpsVpcIsolatedSubnets",
+        vpc_isolated_subnet0 = StringParameter(self, "MLOpsVpcIsolatedSubnet0",
                                                parameter_name="/mlops/vpc/isolated/subnet0/id",
                                                string_value=isolated_subnet0.subnet_id
                                                )
-        vpc_isolated_subnet1 = StringParameter(self, "MLOpsVpcIsolatedSubnets",
+        vpc_isolated_subnet1 = StringParameter(self, "MLOpsVpcIsolatedSubnet1",
                                                parameter_name="/mlops/vpc/isolated/subnet1/id",
                                                string_value=isolated_subnet1.subnet_id
                                                )
