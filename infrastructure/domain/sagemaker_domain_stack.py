@@ -25,7 +25,7 @@ class SagemakerDomainStack(Stack):
         public_subnet_ids = [StringParameter.value_for_string_parameter(self, "/mlops/vpc/public/subnet0/id"),
                              StringParameter.value_for_string_parameter(self, "/mlops/vpc/public/subnet1/id")]
         mlops_sagemaker_domain = CfnDomain(self, "MyCfnDomain",
-                                           auth_mode="authMode",
+                                           auth_mode="IAM",
                                            domain_name=sagemaker_domain_name,
                                            vpc_id=vpc_id,
                                            subnet_ids=public_subnet_ids,
