@@ -47,7 +47,8 @@ class VPCStack(Stack):
         # ==================================================
         CfnOutput(
             scope=self,
-            id="VPCID",
-            value=vpc.vpc_id
+            id="vpc_id",
+            value=vpc.vpc_id,
+            export_name="MLOpsVpcId"
         )
 
