@@ -2,6 +2,7 @@ from aws_cdk import Stack, Fn, Environment, CfnParameter
 from aws_cdk.aws_ec2 import Vpc
 from aws_cdk.aws_iam import Role, ServicePrincipal, ManagedPolicy
 from aws_cdk.aws_sagemaker import CfnDomain, CfnUserProfile
+from aws_cdk.aws_ssm import StringParameter
 from constructs import Construct
 
 
@@ -19,13 +20,14 @@ class SagemakerDomainStack(Stack):
                                                                                       managed_policy_arn="arn:aws:iam::aws:policy/AmazonSageMakerFullAccess")
                                             ])
         sagemaker_domain_name = "SagemakerMLOpsDomain"
-        vpc_id = Fn.import_value("mlops_vpc_id")
-        public_subnets = [Fn.import_value('public_subnet0'), Fn.import_value('public_subnet1')]
+
+        vpc_id = StringParameter.value_for_string_parameter(self, "/mlops/vpc/id")
+        public_subnet_ids = [StringParameter.value_for_string_parameter(self, "/mlops/vpc/public/subnet/id")]
         mlops_sagemaker_domain = CfnDomain(self, "MyCfnDomain",
                                            auth_mode="authMode",
                                            domain_name=sagemaker_domain_name,
                                            vpc_id=vpc_id,
-                                           subnet_ids=public_subnets,
+                                           subnet_ids=public_subnet_ids,
                                            default_user_settings=CfnDomain.UserSettingsProperty(
                                                execution_role=role_sagemaker_studio_domain.role_name
                                            )

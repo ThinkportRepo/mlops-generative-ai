@@ -8,9 +8,22 @@ class SSMStack(Stack):
     def __init__(self, scope: Construct, id: str, *, vpc=Vpc, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        vpc_id_param = StringParameter(self, "MLOpsVpcId",
-                                       parameter_name="/mlops/vpc/id",
-                                       string_value=vpc.vpc_id
-                                       )
+        vpc_id = StringParameter(self, "MLOpsVpcId",
+                                 parameter_name="/mlops/vpc/id",
+                                 string_value=vpc.vpc_id
+                                 )
 
+        vpc_public_subnets = StringParameter(self, "MLOpsVpcId",
+                                             parameter_name="/mlops/vpc/public/subnet/id",
+                                             string_value=vpc.public_subnets
+                                             )
 
+        vpc_private_subnets = StringParameter(self, "MLOpsVpcId",
+                                              parameter_name="/mlops/vpc/private/subnet/id",
+                                              string_value=vpc.private_subnets
+                                              )
+
+        vpc_isolated_subnets = StringParameter(self, "MLOpsVpcId",
+                                               parameter_name="/mlops/vpc/private/subnet/id",
+                                               string_value=vpc.isolated_subnets
+                                               )

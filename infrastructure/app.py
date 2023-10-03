@@ -1,5 +1,4 @@
 # https://konem.blog/2021/01/17/how-to-structure-your-application-architecture-using-aws-cdk/
-import logging
 import os
 
 from aws_cdk import App, Environment, CfnParameter, Aws
