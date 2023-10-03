@@ -49,6 +49,14 @@ class VPCStack(Stack):
             scope=self,
             id="vpc_id",
             value=vpc.vpc_id,
-            export_name="MLOpsVpcId"
+            export_name="mlops_vpc_id"
         )
 
+        for idx, subnet in vpc.private_subnets:
+            CfnOutput(self, f"private_subnet{idx}", value=subnet, export_name=f"private_subnet{idx}")
+
+        for idx, subnet in vpc.public_subnets:
+            CfnOutput(self, f"public_subnet{idx}", value=subnet, export_name=f"public_subnet{idx}")
+
+        for idx, subnet in vpc.isolated_subnets:
+            CfnOutput(self, f"isolated_subnet{idx}", value=subnet, export_name=f"isolated_subnet{idx}")
