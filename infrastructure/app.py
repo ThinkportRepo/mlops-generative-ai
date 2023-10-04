@@ -10,6 +10,9 @@ env_default = Environment(account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.e
 vpc_stack = VPCStack(app, "VPCStack", env=env_default)
 ssm_stack = SSMStack(app, "SSMStack", env=env_default, vpc=vpc_stack.vpc)
 sagemaker_domain_stack = SagemakerDomainStack(app, "SagemakerDomainStack", env=env_default)
+ssm_stack.add_dependency(vpc_stack)
+sagemaker_domain_stack.add_dependency(vpc_stack)
+sagemaker_domain_stack.add_dependency(ssm_stack)
 
 Tags.of(app).add("project", "mlops")
 Tags.of(app).add("owner", "Timea")
