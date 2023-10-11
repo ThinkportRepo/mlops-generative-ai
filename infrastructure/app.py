@@ -1,6 +1,6 @@
 # https://konem.blog/2021/01/17/how-to-structure-your-application-architecture-using-aws-cdk/
 import os
-from aws_cdk import App, Environment, CfnParameter, Aws, Tags
+from aws_cdk import App, Environment, Tags
 from domain.sagemaker_domain_stack import SagemakerDomainStack
 from ssm.ssm_stack import SSMStack
 from vpc.vpc_stack import VPCStack

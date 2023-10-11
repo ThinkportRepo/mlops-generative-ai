@@ -1,5 +1,5 @@
 from aws_cdk import Stack
-from aws_cdk.aws_ec2 import Vpc, SubnetType, SubnetSelection, Subnet
+from aws_cdk.aws_ec2 import Vpc
 from aws_cdk.aws_ssm import StringParameter
 from constructs import Construct
 
