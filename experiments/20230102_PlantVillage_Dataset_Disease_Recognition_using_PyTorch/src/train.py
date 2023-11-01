@@ -18,6 +18,8 @@ torch.backends.cudnn.benchmark = True
 
 # Construct the argument parser.
 parser = argparse.ArgumentParser()
+
+# hyperparameters sent by the client are passed as command-line arguments to the script.
 parser.add_argument(
     '-e', '--epochs',
     type=int,
@@ -38,6 +40,11 @@ parser.add_argument(
     help='model name',
     choices=['mobilenetv3_large', 'shufflenetv2_x1_5', 'efficientnetb0']
 )
+
+# input data and model directories
+parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
+parser.add_argument('--train', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
+parser.add_argument('--test', type=str, default=os.environ['SM_CHANNEL_TEST'])
 args = vars(parser.parse_args())
 
 
@@ -105,10 +112,12 @@ def validate(model, testloader, criterion, class_names):
 
 if __name__ == '__main__':
     # Create a directory with the model name for outputs.
-    out_dir = os.path.join('..', 'outputs', args['model'])
-    os.makedirs(out_dir, exist_ok=True)
+    # out_dir = os.path.join('..', 'outputs', args['model'])
+    # os.makedirs(out_dir, exist_ok=True)
+
+    out_dir = args['model-dir']
     # Load the training and validation datasets.
-    dataset_train, dataset_valid, dataset_classes = get_datasets()
+    dataset_train, dataset_valid, dataset_classes = get_datasets(data_dir=args['train'])
     print(f"[INFO]: Number of training images: {len(dataset_train)}")
     print(f"[INFO]: Number of validation images: {len(dataset_valid)}")
     print(f"[INFO]: Classes: {dataset_classes}")

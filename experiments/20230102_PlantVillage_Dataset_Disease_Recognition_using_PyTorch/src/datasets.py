@@ -47,18 +47,18 @@ def get_valid_transform(image_size):
     return valid_transform
 
 
-def get_datasets():
+def get_datasets(data_dir=None):
     """
     Function to prepare the Datasets.
     Returns the training and validation datasets along 
     with the class names.
     """
     dataset = datasets.ImageFolder(
-        ROOT_DIR,
+        data_dir,
         transform=(get_train_transform(IMAGE_SIZE))
     )
     dataset_test = datasets.ImageFolder(
-        ROOT_DIR,
+        data_dir,
         transform=(get_valid_transform(IMAGE_SIZE))
     )
     dataset_size = len(dataset)
