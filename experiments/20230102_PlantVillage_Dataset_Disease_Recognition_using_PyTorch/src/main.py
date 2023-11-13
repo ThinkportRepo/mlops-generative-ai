@@ -2,6 +2,7 @@ import argparse
 import os
 
 import sagemaker
+from sagemaker import LocalSession
 from sagemaker.pytorch import PyTorch
 
 # Construct the argument parser.
@@ -35,7 +36,8 @@ args = vars(parser.parse_args())
 if __name__ == "__main__":
 
     # Use the AWS region configured with the AWS CLI
-    sess = sagemaker.Session()
+    sess = LocalSession()
+    sess.config = {'local': {'local_code': True}}
     region = sess.boto_region_name
 
     # This does not work on your local machine  because it doesn't have an IAM role
@@ -50,21 +52,22 @@ if __name__ == "__main__":
     else:
         instance_type = "ml.c4.xlarge"
 
-    output_path = os.path.join('..', 'outputs', args['model'])
+    output_path = os.path.join('file://', '..', 'outputs', args['model'])
     est = PyTorch(
         entry_point="train.py",
         role=role,
-        framework_version="1.5.0",
-        py_version="py3",
+        sagemaker_session=sess,
+        framework_version="2.1.0",
+        py_version="py310",
         instance_type=instance_type,
         instance_count=1,
         volume_size=250,
         output_path=output_path,
-        hyperparameters={"epochs": args['epochs'], "learning-rate": args['learning-rate']}
+        hyperparameters={"epochs": args['epochs'], "learning-rate": args['learning_rate']}
     )
 
-    loc_train = os.path.join('..', 'input', 'plantvillage dataset', 'color')
-    loc_test = os.path.join('..', 'input', 'test')
+    loc_train = os.path.join('file://', '..', 'input', 'plantvillage dataset', 'color')
+    loc_test = os.path.join('file://', '..', 'input', 'test')
     # The keys of the channels dictionary are passed to the training image, and it creates the environment variable
     # SM_CHANNEL_<key name>
     channels = {"training": loc_train, "testing": loc_test}

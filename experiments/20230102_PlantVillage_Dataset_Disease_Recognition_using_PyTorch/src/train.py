@@ -43,8 +43,8 @@ parser.add_argument(
 
 # input data and model directories
 parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
-parser.add_argument('--train', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
-parser.add_argument('--test', type=str, default=os.environ['SM_CHANNEL_TEST'])
+parser.add_argument('--train', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
+parser.add_argument('--test', type=str, default=os.environ['SM_CHANNEL_TESTING'])
 args = vars(parser.parse_args())
 
 
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     # out_dir = os.path.join('..', 'outputs', args['model'])
     # os.makedirs(out_dir, exist_ok=True)
 
-    out_dir = args['model-dir']
+    out_dir = args['model_dir']
     # Load the training and validation datasets.
     dataset_train, dataset_valid, dataset_classes = get_datasets(data_dir=args['train'])
     print(f"[INFO]: Number of training images: {len(dataset_train)}")
