@@ -1,7 +1,16 @@
+from torch.hub import load_state_dict_from_url
 from torchvision import models
+from torchvision.models import WeightsEnum
+
+
+def get_state_dict(self, *args, **kwargs):
+    kwargs.pop("check_hash")
+    return load_state_dict_from_url(self.url, *args, **kwargs)
 
 
 def model_config(model_name='mobilenetv3_large'):
+    # https://github.com/pytorch/vision/issues/7744#issuecomment-1757321451
+    WeightsEnum.get_state_dict = get_state_dict
     model = {
         'mobilenetv3_large': models.mobilenet_v3_large(weights='DEFAULT'),
         'shufflenetv2_x1_5': models.shufflenet_v2_x1_5(weights='DEFAULT'),

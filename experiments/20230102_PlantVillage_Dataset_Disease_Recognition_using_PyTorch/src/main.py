@@ -26,7 +26,7 @@ parser.add_argument(
 parser.add_argument(
     '-m', '--model',
     type=str,
-    default='mobilnetv3large',
+    default='mobilenetv3_large',
     help='model name',
     choices=['mobilenetv3_large', 'shufflenetv2_x1_5', 'efficientnetb0']
 )

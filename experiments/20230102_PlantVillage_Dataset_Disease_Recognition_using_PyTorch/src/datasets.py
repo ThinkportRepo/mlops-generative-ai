@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader, Subset
 ROOT_DIR = os.path.join('..', 'input', 'plantvillage dataset', 'color')
 IMAGE_SIZE = 224  # Image size of resize when applying transforms.
 BATCH_SIZE = 32
-NUM_WORKERS = 4  # Number of parallel processes for data preparation.
+NUM_WORKERS = 1  # Number of parallel processes for data preparation.
 VALID_SPLIT = 0.15  # Ratio of data for validation
 
 

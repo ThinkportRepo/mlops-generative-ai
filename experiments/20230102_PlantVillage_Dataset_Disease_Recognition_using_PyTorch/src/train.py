@@ -36,7 +36,7 @@ parser.add_argument(
 parser.add_argument(
     '-m', '--model',
     type=str,
-    default='mobilnetv3large',
+    default='mobilenetv3_large',
     help='model name',
     choices=['mobilenetv3_large', 'shufflenetv2_x1_5', 'efficientnetb0']
 )
@@ -111,10 +111,6 @@ def validate(model, testloader, criterion, class_names):
 
 
 if __name__ == '__main__':
-    # Create a directory with the model name for outputs.
-    # out_dir = os.path.join('..', 'outputs', args['model'])
-    # os.makedirs(out_dir, exist_ok=True)
-
     out_dir = args['model_dir']
     # Load the training and validation datasets.
     dataset_train, dataset_valid, dataset_classes = get_datasets(data_dir=args['train'])
