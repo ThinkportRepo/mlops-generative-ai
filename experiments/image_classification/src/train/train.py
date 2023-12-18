@@ -1,4 +1,5 @@
 # https://debuggercafe.com/plantvillage-dataset-disease-recognition-using-pytorch/
+# https://debuggercafe.com/plantdoc-plant-disease-recognition/
 import torch
 import argparse
 import torch.nn as nn
@@ -6,9 +7,10 @@ import torch.optim as optim
 import os
 
 from tqdm.auto import tqdm
-from model import build_model
-from datasets import get_datasets, get_data_loaders
-from utils import save_model, save_plots, SaveBestModel
+
+from experiments.image_classification.src.datasets import get_datasets, get_data_loaders
+from experiments.image_classification.src.model import build_model
+from experiments.image_classification.src.utils import SaveBestModel, save_model, save_plots
 
 seed = 42
 torch.manual_seed(seed)
