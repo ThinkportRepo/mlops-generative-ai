@@ -54,6 +54,6 @@ jobs:
         working-directory: ./infrastructure
 
       - name: cdk deploy infrastructure stack
-        run: cdk deploy --all --require-approval never
+        run: cdk deploy --parameters ProjectName=mlflow --all --require-approval never
         working-directory: ./infrastructure
 
