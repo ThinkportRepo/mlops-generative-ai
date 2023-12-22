@@ -43,22 +43,16 @@ if __name__ == "__main__":
     output_prefix = "jumpstart-example-sd-training"
 
     # needed for storing model artefacts
-    s3_output_location = f"s3://{output_bucket}/{output_prefix}/output"
+    s3_output_location = f"s3://{output_bucket}/{output_prefix}/model"
     s3_input_data_path = f"s3://{output_bucket}/{output_prefix}/batch_input/"
     s3_output_data_path = f"s3://{output_bucket}/{output_prefix}/batch_output/"
 
     # https://repost.aws/questions/QUkP-cRiP3QiCAIqnwyirz1A/how-to-get-batch-transform-with-jsonl-data
     # https://sagemaker-examples.readthedocs.io/en/latest/introduction_to_amazon_algorithms/jumpstart-foundation-models/text2text-generation-Batch-Transform.html
-    prompt = "A photo of a cedar apple rust"
-    for i in range(2):
-        prompt_file_name = f"cedar_apple_rust_{i}.jsonl"
-        with open(prompt_file_name, "w") as outfile:
-            for _ in range(2):
-                outfile.write(f"{json.dumps(prompt)}\n")
-        # upload prompts to batch input s3 folder
-        s3.upload_file(prompt_file_name, output_bucket, f"{output_prefix}/batch_input/{prompt_file_name}")
+    prompt_file_name = "cedar_apple_rust.json"
+    s3.upload_file(prompt_file_name, output_bucket, f"{output_prefix}/batch_input/{prompt_file_name}")
 
-        # This does not work on your local machine  because it doesn't have an IAM role
+    # This does not work on your local machine  because it doesn't have an IAM role
     # role = sagemaker.get_execution_role()
     aws_role = 'arn:aws:iam::562760952310:role/SagemakerMLOpsUserRole'
 
