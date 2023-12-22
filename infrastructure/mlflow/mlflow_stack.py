@@ -124,7 +124,7 @@ class MLflowStack(Stack):
 
         container = task_definition.add_container(
             id="Container",
-            image=ecs.ContainerImage.from_asset(directory="container"),
+            image=ecs.ContainerImage.from_asset(directory="../../container"),
             environment={
                 "BUCKET": f"s3://{artifact_bucket.bucket_name}",
                 "HOST": database.db_instance_endpoint_address,
