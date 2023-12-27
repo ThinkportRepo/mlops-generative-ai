@@ -1,9 +1,9 @@
 name: Build/deploy sagemaker domain stack
 
 on:
-  push:
-    paths:
-      - container/**
+#  push:
+#    paths:
+#      - container/**
   pull_request:
     branches: [ main ]
   workflow_dispatch:
