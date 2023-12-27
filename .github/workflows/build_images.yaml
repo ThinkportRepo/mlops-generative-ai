@@ -1,0 +1,43 @@
+name: Build and push docker images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - container/spark/**
+    workflow_dispatch:
+
+env:
+  DEPLOYMENT_ROLE: ${{ secrets.DEPLOYMENT_ROLE }}
+  ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - folder: container/spark/
+            repository_name: stable-diffusion-processing
+
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build and Push training image
+        uses: sofianhamiti/composite-action-push-image-ecr@main
+        with:
+          folder: ${{matrix.folder}}
+          repository_name: ${{matrix.repository_name}}
+          image_tag: ${{github.sha}}
+          aws_region: ${{ env.AWS_REGION }}
+          iam_role: ${{ env.DEPLOYMENT_ROLE }}
