@@ -6,6 +6,7 @@ from mlflow.mlflow_stack import MLflowStack
 from ssm.ssm_stack import SSMStack
 from vpc.vpc_stack import VPCStack
 
+
 app = App()
 env_default = Environment(account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.environ["CDK_DEFAULT_REGION"])
 vpc_stack = VPCStack(app, "VPCStack", termination_protection=True, env=env_default)
