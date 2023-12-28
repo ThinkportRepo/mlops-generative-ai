@@ -93,7 +93,7 @@ class MLflowStack(Stack):
                 username=username, password=db_password_secret.secret_value
             ),
             engine=rds.DatabaseInstanceEngine.mysql(
-                version=rds.MysqlEngineVersion.VER_8_0_34
+                version=rds.MysqlEngineVersion.VER_8_0_32
             ),
             instance_type=ec2.InstanceType.of(
                 ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL
@@ -124,7 +124,7 @@ class MLflowStack(Stack):
 
         container = task_definition.add_container(
             id="Container",
-            image=ecs.ContainerImage.from_asset(directory="../container"),
+            image=ecs.ContainerImage.from_asset(directory="../container/mlflow"),
             environment={
                 "BUCKET": f"s3://{artifact_bucket.bucket_name}",
                 "HOST": database.db_instance_endpoint_address,

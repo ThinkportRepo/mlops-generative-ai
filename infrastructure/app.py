@@ -8,9 +8,9 @@ from vpc.vpc_stack import VPCStack
 
 app = App()
 env_default = Environment(account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.environ["CDK_DEFAULT_REGION"])
-vpc_stack = VPCStack(app, "VPCStack", env=env_default)
-ssm_stack = SSMStack(app, "SSMStack", env=env_default, vpc=vpc_stack.vpc)
-mlflow_stack = MLflowStack(app, "MLflowStack", env=env_default, vpc=vpc_stack.vpc)
+vpc_stack = VPCStack(app, "VPCStack", termination_protection=True, env=env_default)
+ssm_stack = SSMStack(app, "SSMStack", termination_protection=True, env=env_default, vpc=vpc_stack.vpc)
+mlflow_stack = MLflowStack(app, "MLflowStack", termination_protection=True, env=env_default, vpc=vpc_stack.vpc)
 sagemaker_domain_stack = SagemakerDomainStack(app, "SagemakerDomainStack", env=env_default)
 ssm_stack.add_dependency(vpc_stack)
 mlflow_stack.add_dependency(vpc_stack)
