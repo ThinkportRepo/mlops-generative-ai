@@ -5,18 +5,12 @@ import logging
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_s3 as s3,
-    aws_ecs as ecs,
     aws_rds as rds,
     aws_iam as iam,
     aws_secretsmanager as sm,
-    aws_ecs_patterns as ecs_patterns,
-    App,
     Stack,
-    CfnParameter,
-    CfnOutput,
     Aws,
-    RemovalPolicy,
-    Duration,
+    RemovalPolicy
 )
 from constructs import Construct
 from aws_cdk.aws_ec2 import Vpc
