@@ -22,11 +22,6 @@ class SSMStack(Stack):
                                  string_value=vpc.vpc_id
                                  )
 
-        vpc_id = StringParameter(self, "MLOpsVpcId",
-                                 parameter_name="/mlops/vpc/id",
-                                 string_value=vpc.vpc_id
-                                 )
-
         public_subnet0 = vpc.public_subnets[0]
         public_subnet1 = vpc.public_subnets[1]
 
