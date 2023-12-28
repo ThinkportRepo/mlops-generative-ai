@@ -19,5 +19,5 @@ sagemaker_domain_stack.add_dependency(ssm_stack)
 
 Tags.of(app).add("project", "mlops")
 Tags.of(app).add("owner", "Timea")
-Tags.of(app).add("ttl", "31.12.2023")
+Tags.of(app).add("ttl", "31.12.2024")
 app.synth()
