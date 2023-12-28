@@ -28,11 +28,10 @@ class MLflowStack(Stack):
         # ==============================
         # ======= CFN PARAMETERS =======
         # ==============================
-        project_name_param = CfnParameter(scope=self, id="ProjectName", type="String")
         db_name = "mlflowdb"
         port = 3306
         username = "master"
-        bucket_name = f"{project_name_param.value_as_string}-artifacts-{Aws.ACCOUNT_ID}"
+        bucket_name = f"mlflow-artifacts-{Aws.ACCOUNT_ID}"
         cluster_name = "mlflow"
         service_name = "mlflow"
 
