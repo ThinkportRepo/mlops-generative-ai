@@ -7,6 +7,20 @@ from constructs import Construct
 class SSMStack(Stack):
     def __init__(self, scope: Construct, id: str, *, vpc=Vpc, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
+        mlflow_tracking_server_ec2_type = StringParameter(self, "MLFlowTrackingServerEC2Type",
+                                 parameter_name="/mlops/mlflow/ec2_type",
+                                 string_value="t2.small"
+                                 )
+
+        mlflow_tracking_server_key_name = StringParameter(self, "MLFlowTrackingServerKeyName",
+                                 parameter_name="/mlops/mlflow/key_name",
+                                 string_value="mlflow-tracking-server-kp"
+                                 )
+
+        vpc_id = StringParameter(self, "MLOpsVpcId",
+                                 parameter_name="/mlops/vpc/id",
+                                 string_value=vpc.vpc_id
+                                 )
 
         vpc_id = StringParameter(self, "MLOpsVpcId",
                                  parameter_name="/mlops/vpc/id",
