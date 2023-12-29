@@ -9,11 +9,11 @@ bucket_name = f"mlflow-artifacts-{Aws.ACCOUNT_ID}"
 linux_ami = ec2.GenericLinuxImage({
     "eu-central-1": "ami-02da8ff11275b7907"
 })
-
-mappings = {"__S3_ARTIFACT_BUCKET__": bucket_name}
-
-with open("user_data/user_data.sh") as f:
-    user_data = Fn.sub(f.read(), mappings)
+#
+# mappings = {"__S3_ARTIFACT_BUCKET__": bucket_name}
+#
+# with open("user_data/user_data.sh") as f:
+#     user_data = Fn.sub(f.read(), mappings)
 
 
 class MLFlowStack(Stack):
