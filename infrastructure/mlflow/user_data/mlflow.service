@@ -1,0 +1,16 @@
+[Unit]
+Description=MLFlow Server
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/bash -c "PATH=$VIRTUAL_ENV/bin/:$PATH exec mlflow server -h 0.0.0.0 --backend-store-uri sqlite:///mlflow.db --default-artifact-root $S3_ARTIFACT_BUCKET"
+
+User=ec2-user
+Group=1000
+WorkingDirectory=/home/ec2-user
+Restart=always
+RestartSec=10
+#KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target
