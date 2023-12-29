@@ -2,7 +2,7 @@
 import os
 from aws_cdk import App, Environment, Tags
 from domain.sagemaker_domain_stack import SagemakerDomainStack
-from infrastructure.mlflow.mlflow_stack import MLFlowStack
+from mlflow.mlflow_stack import MLFlowStack
 from ssm.ssm_stack import SSMStack
 from vpc.vpc_stack import VPCStack
 
