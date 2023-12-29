@@ -9,7 +9,7 @@ import argparse
 import pathlib
 
 from model import build_model
-from class_names import class_names as CLASS_NAMES
+from src.image_classification.src.training.class_names import class_names as CLASS_NAMES
 
 # Construct the argument parser.
 parser = argparse.ArgumentParser()

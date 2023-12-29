@@ -1,0 +1,5 @@
+name: "plant disease classification"
+docker_env: 562760952310.dkr.ecr.eu-central-1.amazonaws.com/pytorch-plant-village-classification:latest
+entry_points:
+    Training:
+        command: "python run_jobs.py"

@@ -5,7 +5,7 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, Subset
 
 # Required constants.
-ROOT_DIR = os.path.join('..', 'input', 'plantvillage dataset', 'color')
+ROOT_DIR = os.path.join('../..', 'input', 'plantvillage dataset', 'color')
 IMAGE_SIZE = 224  # Image size of resize when applying transforms.
 BATCH_SIZE = 32
 NUM_WORKERS = 1  # Number of parallel processes for data preparation.

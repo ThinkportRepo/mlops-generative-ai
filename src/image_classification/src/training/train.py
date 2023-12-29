@@ -5,18 +5,25 @@ import argparse
 import torch.nn as nn
 import torch.optim as optim
 import os
-
+import logging
 from tqdm.auto import tqdm
 
-from experiments.image_classification.src.datasets import get_datasets, get_data_loaders
-from experiments.image_classification.src.model import build_model
-from experiments.image_classification.src.utils import SaveBestModel, save_model, save_plots
+from datasets import get_datasets, get_data_loaders
+from model import build_model
+from utils import save_model
 
 seed = 42
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = True
+import mlflow
+
+logging.basicConfig(
+    format="%(asctime)s %(levelname)s:%(message)s",
+    datefmt="%m/%d/%Y %I:%M:%S %p",
+    level=logging.INFO,
+)
 
 # Construct the argument parser.
 parser = argparse.ArgumentParser()
@@ -26,7 +33,7 @@ parser.add_argument(
     '-e', '--epochs',
     type=int,
     default=10,
-    help='Number of epochs to train our network for'
+    help='Number of epochs to training our network for'
 )
 parser.add_argument(
     '-lr', '--learning-rate',
@@ -35,6 +42,23 @@ parser.add_argument(
     default=0.001,
     help='Learning rate for training the model'
 )
+
+parser.add_argument(
+    '-momentum', '--momentum',
+    type=float,
+    dest='momentum',
+    default=0.9,
+    help='Momentum for training the model'
+)
+
+parser.add_argument(
+    '-tracking_uri', '--tracking_uri',
+    type=str,
+    dest='tracking_uri',
+    default=0.9,
+    help='MLflow tracking server uri'
+)
+
 parser.add_argument(
     '-m', '--model',
     type=str,
@@ -49,7 +73,7 @@ parser.add_argument(
     type=str,
     default=os.environ['SM_MODEL_DIR'])
 parser.add_argument(
-    '--train',
+    '--training',
     type=str,
     default=os.environ['SM_CHANNEL_TRAINING'])
 parser.add_argument(
@@ -60,13 +84,13 @@ args = vars(parser.parse_args())
 
 
 # Training function.
-def train(model, trainloader, optimizer, criterion):
+def train(model, trainloader, optimizer, criterion, device):
     model.train()
-    print('Training')
+    logging.info('Training')
     train_running_loss = 0.0
     train_running_correct = 0
     counter = 0
-    for i, data in tqdm(enumerate(trainloader), total=len(trainloader)):
+    for batch_no, data in tqdm(enumerate(trainloader), total=len(trainloader)):
         counter += 1
         image, labels = data
         image = image.to(device)
@@ -92,9 +116,9 @@ def train(model, trainloader, optimizer, criterion):
 
 
 # Validation function.
-def validate(model, testloader, criterion, class_names):
+def validate(model, testloader, criterion, device):
     model.eval()
-    print('Validation')
+    logging.info('Validation')
     valid_running_loss = 0.0
     valid_running_correct = 0
     counter = 0
@@ -121,23 +145,23 @@ def validate(model, testloader, criterion, class_names):
     return epoch_loss, epoch_acc
 
 
-if __name__ == '__main__':
+def main():
     out_dir = args['model_dir']
+
     # Load the training and validation datasets.
-    dataset_train, dataset_valid, dataset_classes = get_datasets(data_dir=args['train'])
-    print(f"[INFO]: Number of training images: {len(dataset_train)}")
-    print(f"[INFO]: Number of validation images: {len(dataset_valid)}")
-    print(f"[INFO]: Classes: {dataset_classes}")
+    dataset_train, dataset_valid, dataset_classes = get_datasets(data_dir=args['training'])
     # Load the training and validation data loaders.
     train_loader, valid_loader = get_data_loaders(dataset_train, dataset_valid)
 
-    # Learning_parameters. 
+    logging.info("==>>> total training batch number: {}".format(len(train_loader)))
+    logging.info("==>>> total testing batch number: {}\n".format(len(valid_loader)))
+
+    # Training parameters.
     lr = args['learning_rate']
+    momentum = args['momentum']
     epochs = args['epochs']
     device = ('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f"Computation device: {device}")
-    print(f"Learning rate: {lr}")
-    print(f"Epochs to train for: {epochs}\n")
+    batch_size = len(train_loader)
 
     # Load the model.
     model = build_model(
@@ -145,44 +169,70 @@ if __name__ == '__main__':
         fine_tune=True,
         num_classes=len(dataset_classes)
     ).to(device)
-    print(model)
-
-    # Total parameters and trainable parameters.
-    total_params = sum(p.numel() for p in model.parameters())
-    print(f"{total_params:,} total parameters.")
-    total_trainable_params = sum(
-        p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"{total_trainable_params:,} training parameters.")
+    logging.info(model)
+    logging.info("# parameters: {}".format(sum(param.numel() for param in model.parameters())))
 
     # Optimizer.
-    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum)
     # Loss function.
     criterion = nn.CrossEntropyLoss()
 
-    # Initialize `SaveBestModel` class.
-    save_best_model = SaveBestModel()
+    training_parameters = {
+        "batch size": batch_size,
+        "no of epochs": epochs,
+        "optimizer": "stochastic gradient descent",
+        "learning rate": lr,
+        "momentum": momentum,
+        "loss": "cross entropy",
+        "data": {"synth": 0, "real": 1}
+    }
 
-    # Lists to keep track of losses and accuracies.
-    train_loss, valid_loss = [], []
-    train_acc, valid_acc = [], []
-    # Start the training.
-    for epoch in range(epochs):
-        print(f"[INFO]: Epoch {epoch + 1} of {epochs}")
-        train_epoch_loss, train_epoch_acc = train(model, train_loader,
-                                                  optimizer, criterion)
-        valid_epoch_loss, valid_epoch_acc = validate(model, valid_loader,
-                                                     criterion, dataset_classes)
-        train_loss.append(train_epoch_loss)
-        valid_loss.append(valid_epoch_loss)
-        train_acc.append(train_epoch_acc)
-        valid_acc.append(valid_epoch_acc)
-        print(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f}")
-        print(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f}")
-        save_best_model(valid_epoch_loss, epoch, model, out_dir)
-        print('-' * 50)
+    best_acc = 0.0
+    best_epoch = 0
+    with mlflow.start_run(experiment_id=experiment_id):
+        # LOG PARAMS
+        mlflow.log_params(training_parameters)
 
-    # Save the trained model weights.
-    save_model(epochs, model, optimizer, criterion, out_dir)
-    # Save the loss and accuracy plots.
-    save_plots(train_acc, valid_acc, train_loss, valid_loss, out_dir)
-    print('TRAINING COMPLETE')
+        # Start the training.
+        for epoch in range(epochs):
+            logging.info(f"Epoch {epoch + 1} of {epochs}")
+            train_epoch_loss, train_epoch_acc = train(model, train_loader,
+                                                      optimizer, criterion, device)
+            valid_epoch_loss, valid_epoch_acc = validate(model, valid_loader,
+                                                         criterion, device)
+
+            # LOG METRICS
+            metrics = {
+                "training loss": train_epoch_loss,
+                "training accuracy": train_epoch_acc,
+                "validation loss": valid_epoch_loss,
+                "validation accuracy": valid_epoch_acc
+            }
+            mlflow.log_metrics(metrics=metrics, step=epoch)
+
+            logging.info(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f}")
+            logging.info(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f}")
+            logging.info('-' * 50)
+
+            # early stopping with zero patience
+            if valid_epoch_acc < best_acc:
+                break
+            else:
+                best_acc = valid_epoch_acc
+                best_epoch = epoch
+
+        # LOG MODEL
+        mlflow.pytorch.log_model(model, artifact_path="{}-{}".format(best_epoch, best_acc))
+
+        # Save the trained model weights to disk
+        save_model(epochs, model, optimizer, criterion, out_dir)
+
+
+if __name__ == '__main__':
+    mlflow.set_tracking_uri(args['tracking_uri'])
+    experiment_id = mlflow.get_experiment_by_name(args['model'])
+    if experiment_id is None:
+        experiment_id = mlflow.create_experiment(args['model'])
+    else:
+        experiment_id = experiment_id.experiment_id
+    main()
