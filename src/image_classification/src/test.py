@@ -7,10 +7,10 @@ import argparse
 import pathlib
 
 from tqdm.auto import tqdm
-from model import build_model
+from src.image_classification.src.training.model import build_model
 from torch.utils.data import DataLoader
 from torchvision import datasets
-from class_names import class_names
+from training.class_names import class_names
 
 # Construct the argument parser.
 parser = argparse.ArgumentParser()

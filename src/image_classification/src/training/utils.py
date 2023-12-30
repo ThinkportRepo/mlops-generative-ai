@@ -2,14 +2,14 @@ import torch
 import matplotlib
 import matplotlib.pyplot as plt
 import os
-
+import logging
 matplotlib.style.use('ggplot')
 
 
 class SaveBestModel:
     """
     Class to save the best model while training. If the current epoch's 
-    validation loss is less than the previous least less, then save the
+    validation loss is less than the previous least loss, then save the
     model state.
     """
 
@@ -23,8 +23,8 @@ class SaveBestModel:
     ):
         if current_valid_loss < self.best_valid_loss:
             self.best_valid_loss = current_valid_loss
-            print(f"\nBest validation loss: {self.best_valid_loss}")
-            print(f"\nSaving best model for epoch: {epoch + 1}\n")
+            logging.info(f"\nBest validation loss: {self.best_valid_loss}")
+            logging.info(f"\nSaving best model for epoch: {epoch + 1}\n")
             torch.save({
                 'epoch': epoch + 1,
                 'model_state_dict': model.state_dict(),
@@ -51,7 +51,7 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, out_dir):
     plt.figure(figsize=(10, 7))
     plt.plot(
         train_acc, color='tab:blue', linestyle='-',
-        label='train accuracy'
+        label='training accuracy'
     )
     plt.plot(
         valid_acc, color='tab:red', linestyle='-',
@@ -66,7 +66,7 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, out_dir):
     plt.figure(figsize=(10, 7))
     plt.plot(
         train_loss, color='tab:blue', linestyle='-',
-        label='train loss'
+        label='training loss'
     )
     plt.plot(
         valid_loss, color='tab:red', linestyle='-',

@@ -1,0 +1,14 @@
+training:
+    image_uri: 562760952310.dkr.ecr.eu-central-1.amazonaws.com/pytorch-plant-village-classification:latest
+    iam_role: arn:aws:iam::562760952310:role/SagemakerMLOpsUserRole
+    entry_point: train.py
+    source_dir: training
+    hyperparameters:
+        epochs: 10
+        lr: 0.001
+        momentum: 0.9
+        tracking_uri: http://ec2-3-64-47-227.eu-central-1.compute.amazonaws.com:5000
+        model: mobilenetv3_large
+    instance_count: 1
+    instance_type: local_gpu
+    local_mode: True

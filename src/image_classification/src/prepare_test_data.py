@@ -8,7 +8,7 @@ import glob
 import random
 import os
 
-from class_names import class_names as CLASS_NAMES
+from src.image_classification.src.training.class_names import class_names as CLASS_NAMES
 
 random.seed(42)
 
