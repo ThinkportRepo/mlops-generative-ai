@@ -45,5 +45,5 @@ jobs:
 
       - name: Build and Push MLflow image
         run: |
-          cd docker/mlflow_endpoint/
+          cd container/mlflow_endpoint/
           bash mlflow_pyfunc.sh
