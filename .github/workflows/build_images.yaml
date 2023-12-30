@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - container/spark/**
-    workflow_dispatch:
+  workflow_dispatch:
 
 env:
   DEPLOYMENT_ROLE: ${{ secrets.DEPLOYMENT_ROLE }}

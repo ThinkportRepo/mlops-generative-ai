@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - docker/mlflow_endpoint/**
+  workflow_dispatch:
 
 permissions:
   id-token: write
