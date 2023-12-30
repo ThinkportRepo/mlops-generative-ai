@@ -37,7 +37,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ env.DEPLOYMENT_ROLE }}
-          aws-region: eu-central-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Build and Push training image
         uses: sofianhamiti/composite-action-push-image-ecr@main
