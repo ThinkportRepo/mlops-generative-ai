@@ -1,25 +1,24 @@
-name: Build/deploy sagemaker domain stack
+name: Deploy Inference Endpoint
 
 on:
-#  push:
-#    paths:
-#      - container/**
-  pull_request:
-    branches: [ main ]
+  push:
+    branches:
+      - main
+    paths:
+      - src/model_deploy/**
+      - cfg/model_deploy.yaml
   workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
 
 env:
   DEPLOYMENT_ROLE: ${{ secrets.DEPLOYMENT_ROLE }}
-  ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
 
-
-permissions:
-  contents: "read"
-  id-token: "write"
-
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -47,13 +46,13 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ env.DEPLOYMENT_ROLE }}
-          aws-region: eu-central-1
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: cdk bootstrap infrastructure stack
+      - name: cdk bootstrap inference stack
         run: cdk bootstrap aws://${{ env.ACCOUNT_ID }}/${{ env.AWS_REGION }}
-        working-directory: ./infrastructure
+        working-directory: ./src/model_deploy
 
-      - name: cdk deploy infrastructure stack
+      - name: cdk deploy inference stack
         run: cdk deploy --all --require-approval never
-        working-directory: ./infrastructure
+        working-directory: ./src/model_deploy
 

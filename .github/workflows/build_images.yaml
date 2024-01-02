@@ -39,6 +39,10 @@ jobs:
           role-to-assume: ${{ env.DEPLOYMENT_ROLE }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
       - name: Build and Push training image
         uses: sofianhamiti/composite-action-push-image-ecr@main
         with:
