@@ -1,5 +1,3 @@
-import os
-
 import yaml
 import sagemaker
 from constructs import Construct

@@ -40,7 +40,7 @@ jobs:
         run: |
             python3 -m pip install --upgrade pip
             pip3 install -r requirements.txt
-        working-directory: ./infrastructure
+        working-directory: ./src/model_deploy
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
