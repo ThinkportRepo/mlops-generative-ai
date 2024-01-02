@@ -16,6 +16,7 @@ permissions:
 env:
   DEPLOYMENT_ROLE: ${{ secrets.DEPLOYMENT_ROLE }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
+  ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
 
 jobs:
   deploy:
