@@ -1,6 +1,6 @@
 from torch.hub import load_state_dict_from_url
 from torchvision import models
-from torchvision.models import WeightsEnum
+# from torchvision.models import WeightsEnum
 
 
 def get_state_dict(self, *args, **kwargs):
@@ -10,11 +10,11 @@ def get_state_dict(self, *args, **kwargs):
 
 def model_config(model_name='mobilenetv3_large'):
     # https://github.com/pytorch/vision/issues/7744#issuecomment-1757321451
-    WeightsEnum.get_state_dict = get_state_dict
+    # WeightsEnum.get_state_dict = get_state_dict
     model = {
-        'mobilenetv3_large': models.mobilenet_v3_large(weights='DEFAULT'),
-        'shufflenetv2_x1_5': models.shufflenet_v2_x1_5(weights='DEFAULT'),
-        'efficientnetb0': models.efficientnet_b0(weights='DEFAULT')
+        'mobilenetv3_large': models.mobilenet_v3_large(),
+        'shufflenetv2_x1_5': models.shufflenet_v2_x1_5(),
+        'efficientnetb0': models.efficientnet_b0()
     }
     return model[model_name]
 

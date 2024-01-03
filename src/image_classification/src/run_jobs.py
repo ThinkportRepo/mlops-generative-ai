@@ -3,7 +3,6 @@ import yaml
 from sagemaker import LocalSession
 from sagemaker.estimator import Estimator
 
-
 # distributed training
 # https://docs.aws.amazon.com/sagemaker/latest/dg/distributed-training.html
 
@@ -27,8 +26,8 @@ if __name__ == "__main__":
     local_mode = config['training']['local_mode']
 
     if local_mode:
-        loc_train = os.path.join('file://', '..', 'input', 'plantvillage dataset', 'color')
-        loc_test = os.path.join('file://', '..', 'input', 'test')
+        loc_train = os.path.join('file://', '..', 'input_2', 'plantvillage dataset', 'color')
+        loc_test = os.path.join('file://', '..', 'input_2', 'test')
         output_path = os.path.join('file://', '..', 'outputs', config['training']['hyperparameters']['model'])
     else:
         prefix_train = "/pytorch-plant-disease-classification/input/plantvillage/raw/train/"
