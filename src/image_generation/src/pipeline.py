@@ -11,7 +11,6 @@ from sagemaker.workflow.steps import TransformStep, TrainingStep
 from sagemaker import hyperparameters
 
 
-
 if __name__ == "__main__":
     session = LocalPipelineSession()
     aws_region = session.boto_region_name
@@ -42,7 +41,7 @@ if __name__ == "__main__":
 
     # https://repost.aws/questions/QUkP-cRiP3QiCAIqnwyirz1A/how-to-get-batch-transform-with-jsonl-data
     # https://sagemaker-examples.readthedocs.io/en/latest/introduction_to_amazon_algorithms/jumpstart-foundation-models/text2text-generation-Batch-Transform.html
-    prompt_file_name = "cedar_apple_rust.json"
+    prompt_file_name = "../prompts/input/cedar_apple_rust.json"
     s3.upload_file(prompt_file_name, output_bucket, f"{output_prefix}/batch_input/{prompt_file_name}")
 
     # This does not work on your local machine  because it doesn't have an IAM role
