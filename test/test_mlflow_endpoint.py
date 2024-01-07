@@ -1,7 +1,10 @@
 import json
 import logging
 import os
+
+import boto3
 import cv2
+import flask
 import mlflow
 import numpy as np
 import requests
@@ -11,9 +14,9 @@ import yaml
 from torch.nn import functional as F
 import mlflow.pyfunc.scoring_server as pyfunc_scoring_server
 
-
-
 IMAGE_RESIZE = 224
+
+
 # https://github.com/mlflow/mlflow/issues/4142
 # https://github.com/mlflow/mlflow/releases/tag/v1.14.0
 # https://github.com/mlflow/mlflow/pull/3894/files#diff-3f50f710c7971efdf17ce59af95f1af515200cbd62e7c62dedb44107a51edcb9
@@ -65,12 +68,38 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
+def check_status(app_name):
+    sage_client = boto3.client('sagemaker', region_name=config['endpoint']['aws_region'])
+    endpoint_description = sage_client.describe_endpoint(EndpointName=app_name)
+    endpoint_status = endpoint_description['EndpointStatus']
+    return endpoint_status
+
+
+def query_endpoint(app_name, input_json):
+    client = boto3.session.Session().client('sagemaker-runtime', config['endpoint']['aws_region'])
+
+    response = client.invoke_endpoint(
+        EndpointName = app_name,
+        Body = input_json,
+        ContentType = 'application/json'#'; format=pandas-split',
+        )
+
+    preds = response['Body'].read().decode('ascii')
+    preds = json.loads(preds)
+    print('Received response: {}'.format(preds))
+    return preds
+
+
 if __name__ == '__main__':
     # CONFIG
     with open("../cfg/model_deploy.yaml") as f:
         config = yaml.load(f, Loader=yaml.SafeLoader)
 
-    rest_endpoint = config['endpoint']['http_uri']
+    app_name = config['endpoint']['name']
+
+    # print("Application status is {}".format(check_status(app_name)))
+
+    # rest_endpoint = config['endpoint']['http_uri']
 
     # # GET ENDPOINT NAME FROM CONFIG AND DEPLOYMENT ENVIRONMENT
     # logging.info("GET API NAME FROM CONFIG AND DEPLOYMENT ENVIRONMENT")
@@ -96,18 +125,21 @@ if __name__ == '__main__':
         tfserving_input = {"instances": image}
         tfserving_input_as_json = json.dumps(tfserving_input,
                                cls=NumpyEncoder)
+        data = flask.request.data.decode("utf-8")
 
-
-        # result = pyfunc_scoring_server.parse_tf_serving_input(tfserving_input)
-        #
-        pred = test_api(rest_endpoint, tfserving_input_as_json)
-
-        # Softmax probabilities.
-        predictions = F.softmax(torch.from_numpy(pred), dim=1)
-        print(predictions)
-
-        # Predicted class number.
-        output_class = np.argmax(predictions)
-
-        print(output_class)
-
+        # pred = query_endpoint(app_name, tfserving_input_as_json)
+        # print(pred)
+    #
+    #
+    #     # result = pyfunc_scoring_server.parse_tf_serving_input(tfserving_input)
+    #     #
+    #     pred = test_api(rest_endpoint, tfserving_input_as_json)
+    #
+    #     # Softmax probabilities.
+    #     predictions = F.softmax(torch.from_numpy(pred), dim=1)
+    #     print(predictions)
+    #
+    #     # Predicted class number.
+    #     output_class = np.argmax(predictions)
+    #
+    #     print(output_class)
