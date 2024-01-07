@@ -79,10 +79,10 @@ def query_endpoint(app_name, input_json):
     client = boto3.session.Session().client('sagemaker-runtime', config['endpoint']['aws_region'])
 
     response = client.invoke_endpoint(
-        EndpointName = app_name,
-        Body = input_json,
-        ContentType = 'application/json'#'; format=pandas-split',
-        )
+        EndpointName=app_name,
+        Body=input_json,
+        ContentType='application/json'  # '; format=pandas-split',
+    )
 
     preds = response['Body'].read().decode('ascii')
     preds = json.loads(preds)
@@ -105,12 +105,12 @@ if __name__ == '__main__':
     # logging.info("GET API NAME FROM CONFIG AND DEPLOYMENT ENVIRONMENT")
     # api_name = f"{config['model']['name']}-{config['model']['version']}-{os.environ['DEPLOYMENT_ENV']}"
     #
-    # mlflow.set_tracking_uri(config['model']['tracking_uri'])
+    mlflow.set_tracking_uri(config['model']['tracking_uri'])
     #
-    # logged_model = config['model']['model_uri']
+    logged_model = config['model']['model_uri']
     #
     # # Load model as a PyFuncModel.
-    # loaded_model = mlflow.pyfunc.load_model(logged_model)
+    loaded_model = mlflow.pyfunc.load_model(logged_model)
 
     # print(loaded_model)
     print(load_files("Apple___Cedar_apple_rust"))
@@ -124,22 +124,23 @@ if __name__ == '__main__':
         image = image.detach().numpy()
         tfserving_input = {"instances": image}
         tfserving_input_as_json = json.dumps(tfserving_input,
-                               cls=NumpyEncoder)
-        data = flask.request.data.decode("utf-8")
+                                             cls=NumpyEncoder).encode('utf-8')
+        data = tfserving_input_as_json.decode('utf-8')
+        decoded_input = json.loads(data)
+        data = {k: v for k, v in decoded_input.items() if k in {"instances", "inputs"}}
 
         # pred = query_endpoint(app_name, tfserving_input_as_json)
         # print(pred)
-    #
-    #
-    #     # result = pyfunc_scoring_server.parse_tf_serving_input(tfserving_input)
-    #     #
-    #     pred = test_api(rest_endpoint, tfserving_input_as_json)
-    #
-    #     # Softmax probabilities.
-    #     predictions = F.softmax(torch.from_numpy(pred), dim=1)
-    #     print(predictions)
-    #
-    #     # Predicted class number.
-    #     output_class = np.argmax(predictions)
-    #
-    #     print(output_class)
+        #
+        #
+        result = pyfunc_scoring_server.parse_tf_serving_input(data)
+        pred = loaded_model.predict(result)
+
+        # Softmax probabilities.
+        predictions = F.softmax(torch.from_numpy(pred), dim=1)
+        print(predictions)
+
+        # Predicted class number.
+        output_class = np.argmax(predictions)
+
+        print(output_class)

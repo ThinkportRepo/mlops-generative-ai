@@ -1,7 +1,7 @@
 model:
     name: mobilenetv3-large
     version: 1
-    tracking_uri: http://ec2-3-79-56-132.eu-central-1.compute.amazonaws.com:5000/
+    tracking_uri: http://ec2-54-93-62-8.eu-central-1.compute.amazonaws.com:5000/
     model_uri: 'runs:/d9a0583b847c4fa1aeed92362ea83b7d/9-100.0'
 
 endpoint:
