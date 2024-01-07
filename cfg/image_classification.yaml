@@ -7,7 +7,7 @@ training:
         epochs: 10
         lr: 0.001
         momentum: 0.9
-        tracking_uri: http://ec2-3-120-182-87.eu-central-1.compute.amazonaws.com:5000/
+        tracking_uri: http://ec2-18-153-68-52.eu-central-1.compute.amazonaws.com:5000
         model: mobilenetv3_large
     instance_count: 1
     instance_type: local_gpu

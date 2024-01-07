@@ -1,14 +1,15 @@
 model:
-    name: plant-village-mobilenetv3-large
+    name: mobilenetv3-large
     version: 1
-    tracking_uri: http://ec2-3-64-47-227.eu-central-1.compute.amazonaws.com:5000
-    model_uri: s3://mlflow-artifacts-562760952310/1/8bf7d3e7e2ae4261bfc3e738bb05b470/artifacts/8-99.44554455445544
+    tracking_uri: http://ec2-3-79-56-132.eu-central-1.compute.amazonaws.com:5000/
+    model_uri: 'runs:/d9a0583b847c4fa1aeed92362ea83b7d/9-100.0'
 
 endpoint:
-    name: plant-village-mobilenetv3-large
+    name: mobilenetv3-large-1-dev
     instance_type: ml.p2.xlarge
     instance_count: 1
     image_uri: 562760952310.dkr.ecr.eu-central-1.amazonaws.com/mlflow-pyfunc:2.9.2
+    http_uri: https://runtime.sagemaker.eu-central-1.amazonaws.com/endpoints/mobilenetv3-large-1-dev/invocations
 
 
 
